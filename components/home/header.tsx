@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Ghost } from "lucide-react";
 import Link from "next/link";
 
@@ -16,14 +17,25 @@ const Header = () => {
             </div>
             <div className="flex lg:justify-center gap-2 lg:gap-12 lg-items-center">
                 <NavLink href="/#pricing">Pricing</NavLink>
-                <NavLink href="/posts">Your Blogs</NavLink>
+                <SignedIn>
+                    <NavLink href="/posts">Your Blogs</NavLink>
+                </SignedIn>
             </div>
             <div className="flex lg:justify-end lg:flex-1">
                 <div className="flex gap-2 items-center">
-                    <NavLink href="/dashboard">Upload a Video</NavLink>
+                    <SignedIn>
+                        <NavLink href="/dashboard">Upload a Video</NavLink>
+                    </SignedIn>
                 </div>
-                <NavLink href="/sign-in">Sign In</NavLink>
+                <SignedIn>
+                    <UserButton />
+                </SignedIn>
             </div>
+            <SignedOut>
+                <SignInButton>
+                    <NavLink href="/sign-in">Sign In</NavLink>
+                </SignInButton>
+            </SignedOut>
         </nav>
     );
 };
