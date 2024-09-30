@@ -1,3 +1,7 @@
+import {
+    handleCheckoutSessionCompleted,
+    handleSubscriptionDeleted,
+} from "@/lib/payment-helpers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -20,10 +24,6 @@ export async function POST(req: NextRequest) {
 
         // Handle the event
         switch (event.type) {
-            // case "payment_intent.succeeded": {
-            //     const paymentIntentSucceeded = event.data.object;
-            //     console.log({ paymentIntentSucceeded });
-            // }
             case "checkout.session.completed": {
                 const session = await stripe.checkout.sessions.retrieve(
                     event.data.object.id,
@@ -31,17 +31,17 @@ export async function POST(req: NextRequest) {
                         expand: ["line_items"],
                     }
                 );
-                console.log({ session });
+                console.log("SESSION", session);
 
                 //connect to the db create or update user
-                //   await handleCheckoutSessionCompleted({ session, stripe });
+                await handleCheckoutSessionCompleted({ session, stripe });
                 break;
             }
             case "customer.subscription.deleted": {
                 // connect to db
                 const subscriptionId = event.data.object.id;
 
-                //   await handleSubscriptionDeleted({ subscriptionId, stripe });
+                await handleSubscriptionDeleted({ subscriptionId, stripe });
                 break;
             }
             default:
